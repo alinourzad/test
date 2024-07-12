@@ -1,0 +1,90 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: front
+  namespace: default
+  labels:
+    k8s-app: hands-on-test
+spec:
+  selector:
+    matchLabels:
+      name: front
+  template:
+    metadata:
+      labels:
+        name: front
+    spec:
+      containers:
+      - name: front
+        image: front:0.1
+        ports:
+        - containerPort: 80
+          hostPort: 8080
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: back
+  namespace: default
+  labels:
+    k8s-app: hands-on-test
+spec:
+  selector:
+    matchLabels:
+      name: back
+  template:
+    metadata:
+      labels:
+        name: back
+    spec:
+      containers:
+      - name: back
+        image: back:0.1
+        ports:
+        - containerPort: 8081
+          hostPort: 8081
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-service
+  namespace: default
+  labels:
+    k8s-app: hands-on-test
+spec:
+  selector: 
+    name: front
+  ports:
+  - port: 8080
+    nodePort: 30000
+    targetPort: 8080
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-service
+  namespace: default
+  labels:
+    k8s-app: hands-on-test
+spec:
+  selector: 
+    name: back
+  ports:
+  - port: 8081
+    targetPort: 8081
