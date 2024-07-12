@@ -1,0 +1,25 @@
+<html>
+
+<head>
+    <title>hads on test</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+    <button id="btn1" type="button">NOW</button>
+    <script>
+        $("#btn1").click(function(){
+            var d = new Date(Date.now())
+            // console.log(d.toDateString())
+            $.ajax({
+                type: "POST",
+                url: "http://172.17.0.1:8081",
+                data: d.toDateString()
+                // success: success,
+                // dataType: dataType
+            });
+        });
+    </script>
+</body>
+
+</html>
